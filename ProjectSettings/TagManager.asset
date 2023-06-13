@@ -8,6 +8,11 @@ TagManager:
   - Ladder
   - Teleport
   - Damage
+  - Gun
+  - Door
+  - Bench
+  - Enemy
+  - Teleport1
   layers:
   - Default
   - TransparentFX

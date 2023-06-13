@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
         else
         {
             activePlayer.transform.position = spawnpoint.transform.position;
+            activePlayer.transform.rotation = spawnpoint.transform.rotation;
         }
     }
 
