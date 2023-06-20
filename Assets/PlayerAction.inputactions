@@ -60,9 +60,45 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Equip1",
+                    "type": "Button",
+                    "id": "b59fe1fe-68f2-4a59-97b4-6e32e818cfff",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Reload",
                     "type": "Button",
                     "id": "d60cd22e-e1d4-43e7-b180-99d352eb0bd6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "bfe4027f-a45c-48bd-8049-9677827d99dd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SprintDone",
+                    "type": "Button",
+                    "id": "771688be-f595-4c22-bd45-7e68618def4f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FireHold",
+                    "type": "Button",
+                    "id": "ec2e5138-b185-4dcd-8d0d-1c1479190e1c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -331,6 +367,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ff4910bb-0a65-421c-a0f4-e8a99d69c2f8",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "163b2aa1-38db-44fc-967b-f770b6928d99",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SprintDone",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "55e7d625-49fc-4459-99e5-c9d2abc413ab",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Equip1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "864696b7-19a0-4dbe-912f-df3aea7c6a3b",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "FireHold",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

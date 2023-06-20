@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ScrapYard.unity
     guid: ee8173601b6e15f4d9123c91a3204dd1
+  - enabled: 1
+    path: Assets/Scenes/Cave.unity
+    guid: aad4164201811b545b57c35fa01ead27
+  - enabled: 1
+    path: Assets/Scenes/Main Menu.unity
+    guid: 1e8fba4d634a4dd469f62ae19e6b38ce
   m_configObjects: {}

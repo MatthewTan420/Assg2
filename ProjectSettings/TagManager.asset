@@ -13,14 +13,28 @@ TagManager:
   - Bench
   - Enemy
   - Teleport1
+  - Teleport0
+  - Start
+  - Key
+  - Lock
+  - Bullet
+  - Teleport2
+  - Projectile
+  - Menu
+  - Bomb
+  - Heal
+  - Rifle
+  - Brute
+  - Upgrade
+  - Warning
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
+  - Gate
   - 
   - 
   - 
