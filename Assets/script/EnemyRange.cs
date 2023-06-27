@@ -43,6 +43,14 @@ public class EnemyRange : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Explode")
+        {
+            Destroy(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {

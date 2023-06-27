@@ -5,6 +5,7 @@ using UnityEngine;
 public class Boss : MonoBehaviour
 {
     public float MaxSpeed;
+    public float chrgSpeed;
     private float RageSpeed;
     float Speed;
     public float rageSpeed;
@@ -20,11 +21,22 @@ public class Boss : MonoBehaviour
 
     public float hp;
     float RageHP;
+    float numberLol = 2;
+
+    public Transform ProjectileSpawnPoint;
+    public GameObject projectilePrefab;
+    public float ProjectileSpeed = 7;
+    public float firerate;
+    public float nextfire;
+
+    public float chrgAtk;
+    float nextchrg;
 
     private bool seePlayer;
 
     public AudioSource dieAudio;
     public GameObject Spawn;
+    public GameObject Disable;
 
     void OnCollisionEnter(Collision collision)
     {
@@ -39,6 +51,7 @@ public class Boss : MonoBehaviour
             {
                 dieAudio.Play();
                 Spawn.SetActive(true);
+                Disable.SetActive(false);
                 Destroy(gameObject);
             }
         }
@@ -50,6 +63,7 @@ public class Boss : MonoBehaviour
         Speed = MaxSpeed;
         RageSpeed = Speed * rageSpeed;
         RageHP = hp * 0.3f;
+        nextchrg = chrgAtk;
     }
 
     // Update is called once per frame
@@ -81,15 +95,52 @@ public class Boss : MonoBehaviour
                     var Distance = Heading.magnitude;
                     var Direction = Heading / Distance;
 
-                    Vector3 Move = new Vector3(Direction.x * Speed, 0, Direction.z * Speed);
-                    rb.velocity = Move;
-                    transform.forward = Move;
+                    if (Time.time > nextfire)
+                    {
+                        //shotAudio.Play();
+                        nextfire = Time.time + firerate;
+                        var bullet = Instantiate(projectilePrefab, ProjectileSpawnPoint.position, ProjectileSpawnPoint.rotation);
+                        bullet.GetComponent<Rigidbody>().velocity = ProjectileSpawnPoint.forward * ProjectileSpeed;
+                    }
+
+                    if (Time.time > nextchrg)
+                    {
+                        
+                        if (numberLol > 0)
+                        {
+                            numberLol -= 1 * Time.deltaTime;
+                            Vector3 Move = new Vector3(Direction.x * chrgSpeed, 0, Direction.z * chrgSpeed);
+                            rb.velocity = Move;
+                            transform.forward = Move;
+                        }
+                        else
+                        {
+                            numberLol = 2;
+                            nextchrg = Time.time + chrgAtk + numberLol;
+                        }
+                    }
+                    else if (Time.time <= nextchrg)
+                    {
+                        Vector3 Move = new Vector3(Direction.x * Speed, 0, Direction.z * Speed);
+                        rb.velocity = Move;
+                        transform.forward = Move;
+                    }
+
+                    
                 }
+
                 else if (Hit.collider.tag == "Player" && (hp <= RageHP))
                 {
                     var Heading = Target.transform.position - transform.position;
                     var Distance = Heading.magnitude;
                     var Direction = Heading / Distance;
+
+                    if (Time.time > nextfire)
+                    {
+                        nextfire = Time.time + firerate;
+                        var bullet = Instantiate(projectilePrefab, ProjectileSpawnPoint.position, ProjectileSpawnPoint.rotation);
+                        bullet.GetComponent<Rigidbody>().velocity = ProjectileSpawnPoint.forward * ProjectileSpeed;
+                    }
 
                     Vector3 Move = new Vector3(Direction.x * RageSpeed, 0, Direction.z * RageSpeed);
                     rb.velocity = Move;

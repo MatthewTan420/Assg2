@@ -27,6 +27,14 @@ TagManager:
   - Brute
   - Upgrade
   - Warning
+  - Boss
+  - Crystal
+  - Teleport3
+  - Gas
+  - Teleport4
+  - Win
+  - Explode
+  - hitshipHint
   layers:
   - Default
   - TransparentFX

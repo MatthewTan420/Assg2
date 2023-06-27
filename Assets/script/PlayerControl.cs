@@ -31,25 +31,30 @@ public class PlayerControl : MonoBehaviour
     public bool isLadder = false;
     public bool isDie = false;
     public bool EPort = false;
-    public static bool gunActive = true;
+    public static bool gunActive = false;
     public static bool rifleActive = true;
     public bool gunOn= false;
     public bool rifleOn = false;
-    public static bool rifleWork = false;
+    public static bool rifleWork = true;
     public int sceneNum = 0;
     public GameObject gun;
     public GameObject rifle;
     public GameObject bench;
     public GameObject ammo;
     public GameObject ammoR;
+    public GameObject Win;
+    public GameObject Defeat;
     public bool Key = false;
     public bool isLock = false;
+    public static bool crystal = true;
     public GameObject lockDoor;
     public static float hP = 100;
     public TextMeshProUGUI HP;
-    public Explode explode;
-    public Explode expscript;
     public GameObject Warning;
+    private bool isGas = false;
+    float gasTime = 0;
+    float timerVal = 0;
+    bool endGame = false;
 
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
@@ -67,6 +72,8 @@ public class PlayerControl : MonoBehaviour
     public AudioSource shotAudio;
     public ParticleSystem MuzzleFlashR;
     public AudioSource shotAudioR;
+
+    public GameObject hitshipHint;
 
     public GameObject playerPrefab;
     private PlayerControl activePlayer;
@@ -161,6 +168,16 @@ public class PlayerControl : MonoBehaviour
             sceneNum = 3;
             EPort = true;
         }
+        if (col.gameObject.tag == "Teleport3")
+        {
+            sceneNum = 4;
+            EPort = true;
+        }
+        if (col.gameObject.tag == "Teleport4" && crystal)
+        {
+            sceneNum = 0;
+            EPort = true;
+        }
         if (col.gameObject.tag == "Teleport0")
         {
             sceneNum = 0;
@@ -184,6 +201,38 @@ public class PlayerControl : MonoBehaviour
         if (col.gameObject.tag == "Warning")
         {
             Warning.SetActive(true);
+        }
+
+        if (col.gameObject.tag == "Gas")
+        {
+            if (hP > 0)
+            {
+                HP.text = hP + "%";
+                isGas = true;
+            }
+            else if (hP <= 0)
+            {
+                isDie = true;
+                GetComponent<Animator>().SetTrigger("Die");
+            }
+        }
+        if (col.gameObject.tag == "Explode")
+        {
+            if (hP > 0)
+            {
+                hP -= 50;
+                HP.text = hP + "%";
+            }
+            else if (hP <= 0)
+            {
+                isDie = true;
+                GetComponent<Animator>().SetTrigger("Die");
+            }
+        }
+
+        if (col.gameObject.tag == "hitshipHint")
+        {
+            hitshipHint.SetActive(true);
         }
     }
 
@@ -215,6 +264,11 @@ public class PlayerControl : MonoBehaviour
         if (col.gameObject.tag == "Warning")
         {
             Warning.SetActive(false);
+        }
+
+        if (col.gameObject.tag == "Gas")
+        {
+           isGas = false;
         }
     }
 
@@ -307,6 +361,10 @@ public class PlayerControl : MonoBehaviour
         {
             SceneManager.LoadScene(3);
         }
+        if (EPort == true && sceneNum == 4)
+        {
+            SceneManager.LoadScene(4);
+        }
     }
 
     void OnEquip(InputValue value)
@@ -363,6 +421,17 @@ public class PlayerControl : MonoBehaviour
 
     //////////////////////////////////////////////////////////
 
+    
+
+    void Timer(float sec)
+    {
+        timerVal += Time.deltaTime;
+        if (timerVal > sec)
+        {
+            SceneManager.LoadScene(5);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -393,7 +462,20 @@ public class PlayerControl : MonoBehaviour
         */
         if (isDie == true) 
         {
+            Defeat.SetActive(true);
             return;
+        }
+
+        if (endGame == true)
+        {
+            Timer(5);
+        }
+
+        if (isGas == true && Time.time > gasTime)
+        {
+            hP -= 1;
+            HP.text = hP + "%";
+            gasTime = Time.time + 1;
         }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -401,12 +483,6 @@ public class PlayerControl : MonoBehaviour
         //if user mouse is at the button
         if (Input.GetMouseButtonDown(0))
         {
-            //if user clicks on the button
-            if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Start")
-            {
-                Debug.Log("Done");
-            }
-
             if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Gun")
             {
                 //what happens after clicking
@@ -431,6 +507,20 @@ public class PlayerControl : MonoBehaviour
             else if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Bench")
             {
                 bench.SetActive(true);
+            }
+            else if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Crystal")
+            {
+                crystal = true;
+                Destroy(hit.collider.gameObject);
+            }
+            else if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Win")
+            {
+                if (crystal)
+                {
+                    Win.SetActive(true);
+                    endGame = true;
+                }
+                
             }
         }
 

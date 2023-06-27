@@ -7,11 +7,20 @@ public class GameManager : MonoBehaviour
 {
     public GameObject playerPrefab;
     private PlayerControl activePlayer;
+    public static GameManager instance;
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        SceneManager.activeSceneChanged += SpawnPlayerOnScreenLoad;
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            DontDestroyOnLoad(gameObject);
+            SceneManager.activeSceneChanged += SpawnPlayerOnScreenLoad;
+            instance = this;
+        }
     }
 
     private void SpawnPlayerOnScreenLoad(Scene curScene, Scene next)

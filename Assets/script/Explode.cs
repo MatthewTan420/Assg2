@@ -7,7 +7,9 @@ public class Explode : MonoBehaviour
     public GameObject exp;
     public float expForce, radius;
     public bool expBool = false;
-    public float expDmg = 50;
+    public GameObject gas;
+    public GameObject Exp;
+    public AudioSource expAudio;
 
     void OnCollisionEnter(Collision collision)
     {
@@ -16,8 +18,30 @@ public class Explode : MonoBehaviour
             GameObject _exp = Instantiate(exp, transform.position, transform.rotation);
             Destroy(_exp, 3);
             knockback();
-            Destroy(gameObject);
             expBool = true;
+            expAudio.Play();
+            gas.SetActive(true);
+            Exp.SetActive(true);
+
+            if (expBool)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        if (collision.gameObject.tag == "Projectile")
+        {
+            GameObject _exp = Instantiate(exp, transform.position, transform.rotation);
+            Destroy(_exp, 3);
+            knockback();
+            expAudio.Play();
+            expBool = true;
+            Exp.SetActive(true);
+
+            if (expBool)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
