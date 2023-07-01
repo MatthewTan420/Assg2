@@ -35,8 +35,10 @@ public class Boss : MonoBehaviour
     private bool seePlayer;
 
     public AudioSource dieAudio;
+
     public GameObject Spawn;
     public GameObject Disable;
+    public HealthBar healthBar;
 
     void OnCollisionEnter(Collision collision)
     {
@@ -46,8 +48,9 @@ public class Boss : MonoBehaviour
             {
                 hp -= 1;
                 dieAudio.Play();
+                healthBar.SetHealth(hp);
             }
-            else
+            if (hp <= 0)
             {
                 dieAudio.Play();
                 Spawn.SetActive(true);
@@ -64,6 +67,7 @@ public class Boss : MonoBehaviour
         RageSpeed = Speed * rageSpeed;
         RageHP = hp * 0.3f;
         nextchrg = chrgAtk;
+        healthBar.SetMaxHealth(hp);
     }
 
     // Update is called once per frame

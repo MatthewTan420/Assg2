@@ -22,6 +22,8 @@ public class Enemy : MonoBehaviour
 
     public AudioSource dieAudio;
 
+    public HealthBar healthBar;
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Bullet")
@@ -29,9 +31,10 @@ public class Enemy : MonoBehaviour
             if (hp > 0 ) 
             {
                 hp -= 1;
+                healthBar.SetHealth(hp);
                 dieAudio.Play();
             }
-            else
+            if (hp <= 0)
             {
                 dieAudio.Play();
                 Destroy(gameObject);
@@ -43,7 +46,18 @@ public class Enemy : MonoBehaviour
     {
         if (col.gameObject.tag == "Explode")
         {
-            Destroy(gameObject);
+            if (hp > 0)
+            {
+                Debug.Log("hi");
+                hp -= 30;
+                healthBar.SetHealth(hp);
+                //dieAudio.Play();
+            }
+            if (hp <= 0)
+            {
+                //dieAudio.Play();
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -51,6 +65,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         Speed = MaxSpeed;
+        healthBar.SetMaxHealth(hp);
     }
 
     // Update is called once per frame

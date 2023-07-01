@@ -6,6 +6,12 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/*
+ * Author: Matthew Tan 
+ * Date: 1/7/2023
+ * Description: This is the code for all of the player controls, raycasting and interactions
+ */
+
 public class PlayerControl : MonoBehaviour
 {
     Vector3 movementInput = Vector3.zero;
@@ -14,8 +20,6 @@ public class PlayerControl : MonoBehaviour
     Vector3 rotationInput = Vector3.zero;
     public float rotationSpeed = 0.0f;
 
-    //public Start script;
-    //public Camera mainCamera;
     public GameObject UI;
     public GameObject Menu;
 
@@ -24,18 +28,22 @@ public class PlayerControl : MonoBehaviour
 
     public float staminaRate = 0.1f;
     public float recoverRate = 0.02f;
-    public bool sprint = false;
+    private bool sprint = false;
     public Image staminaBar;
 
-    public bool PlayerGrounded = true;
-    public bool isLadder = false;
+    private bool PlayerGrounded = true;
+    private bool isMoving = false;
+    private bool Interact = false;
+    private bool isLadder = false;
     public bool isDie = false;
-    public bool EPort = false;
-    public static bool gunActive = false;
+    public bool isEmo = false;
+    private bool EPort = false;
+    public static bool gunActive = true;
     public static bool rifleActive = true;
-    public bool gunOn= false;
-    public bool rifleOn = false;
-    public static bool rifleWork = true;
+    private static bool gunOn = false;
+    private static bool rifleOn = false;
+    public static bool getUpg = true;
+    public static bool rifleWork = false;
     public int sceneNum = 0;
     public GameObject gun;
     public GameObject rifle;
@@ -44,17 +52,24 @@ public class PlayerControl : MonoBehaviour
     public GameObject ammoR;
     public GameObject Win;
     public GameObject Defeat;
+    public GameObject EmoDmg;
     public bool Key = false;
     public bool isLock = false;
     public static bool crystal = true;
+    public static bool parts = true;
     public GameObject lockDoor;
     public static float hP = 100;
     public TextMeshProUGUI HP;
     public GameObject Warning;
+    private bool warningMsg = false;
     private bool isGas = false;
     float gasTime = 0;
+    float gasVal = 0;
+    float timeGas = 0;
     float timerVal = 0;
+    float timerWarn = 0;
     bool endGame = false;
+    bool isEsc = true;
 
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
@@ -73,11 +88,17 @@ public class PlayerControl : MonoBehaviour
     public ParticleSystem MuzzleFlashR;
     public AudioSource shotAudioR;
 
-    public GameObject hitshipHint;
+    public GameObject msgHint;
+    public TextMeshProUGUI Hintmsg;
+    public GameObject engine;
+    public GameObject power;
 
     public GameObject playerPrefab;
     private PlayerControl activePlayer;
 
+    ///<summary>
+    /// Player Collisions with objects
+    ///</summary>
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Menu")
@@ -85,6 +106,13 @@ public class PlayerControl : MonoBehaviour
             isDie = true;
             Menu.SetActive(true);
             UI.SetActive(false);
+
+            gunActive = false;
+            rifleActive = false;
+            rifleWork = false;
+            crystal = false;
+            parts = false;
+            hP = 100;
         }
 
         if (collision.gameObject.tag == "Solid")
@@ -107,11 +135,13 @@ public class PlayerControl : MonoBehaviour
 
         if (collision.gameObject.tag == "Upgrade")
         {
-            rifleWork = true;
-            ammoRCount.text = capacityR + "/30";
+            getUpg = true;
             Destroy(collision.gameObject);
         }
 
+        ///<summary>
+        /// Player Takes Damage
+        ///</summary>
         if (collision.gameObject.tag == "Enemy")
         {
             if (hP > 0) 
@@ -119,13 +149,10 @@ public class PlayerControl : MonoBehaviour
                 hP -= 10;
                 HP.text = hP + "%";
             }
-            else
-            {
-                isDie = true;
-                GetComponent<Animator>().SetTrigger("Die");
-            }
         }
-
+        ///<summary>
+        /// Player Takes Damage
+        ///</summary>
         if (collision.gameObject.tag == "Projectile")
         {
             if (hP > 0) 
@@ -133,14 +160,12 @@ public class PlayerControl : MonoBehaviour
                 hP -= 20;
                 HP.text = hP + "%";
             }
-            else
-            {
-                isDie = true;
-                GetComponent<Animator>().SetTrigger("Die");
-            }
         }
     }
 
+    ///<summary>
+    /// Player Triggering the objects
+    ///</summary>
     void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.tag == "Ladder")
@@ -191,29 +216,30 @@ public class PlayerControl : MonoBehaviour
                 hP -= 30;
                 HP.text = hP + "%";
             }
-            else if (hP <= 0)
-            {
-                isDie = true;
-                GetComponent<Animator>().SetTrigger("Die");
-            }
         }
 
         if (col.gameObject.tag == "Warning")
         {
-            Warning.SetActive(true);
+            warningMsg = true;
+            timerWarn = 0;
         }
 
-        if (col.gameObject.tag == "Gas")
+        if (col.gameObject.tag == "EmotionDmg")
         {
+            isEmo = true;
+            GetComponent<Animator>().SetTrigger("Die");
+        }
+
+        ///<summary>
+        /// Player Takes Damage
+        ///</summary>
+        if (col.gameObject.tag == "Gas")
+        {   
             if (hP > 0)
             {
                 HP.text = hP + "%";
                 isGas = true;
-            }
-            else if (hP <= 0)
-            {
-                isDie = true;
-                GetComponent<Animator>().SetTrigger("Die");
+                gasTime = 0;
             }
         }
         if (col.gameObject.tag == "Explode")
@@ -223,16 +249,24 @@ public class PlayerControl : MonoBehaviour
                 hP -= 50;
                 HP.text = hP + "%";
             }
-            else if (hP <= 0)
-            {
-                isDie = true;
-                GetComponent<Animator>().SetTrigger("Die");
-            }
         }
 
         if (col.gameObject.tag == "hitshipHint")
         {
-            hitshipHint.SetActive(true);
+            msgHint.SetActive(true);
+            Hintmsg.text = "Maybe i can shoot the ship to cross over";
+        }
+        if (col.gameObject.tag == "mainSign")
+        {
+            msgHint.SetActive(true);
+            if (!parts)
+            {
+                Hintmsg.text = "I should find a Village";
+            }
+            else
+            {
+                Hintmsg.text = "Now I can go to the Cave";
+            }
         }
     }
 
@@ -263,6 +297,7 @@ public class PlayerControl : MonoBehaviour
 
         if (col.gameObject.tag == "Warning")
         {
+            warningMsg = false;
             Warning.SetActive(false);
         }
 
@@ -272,12 +307,45 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    void craftRifle()
+    void Timer(float sec)
     {
-        rifleWork = true;
+        timerVal += Time.deltaTime;
+        if (timerVal > sec)
+        {
+            SceneManager.LoadScene(5);
+        }
     }
 
-    //Player Controls
+    public void warnStop(int sec)
+    {
+        Warning.SetActive(true);
+        timerWarn += Time.deltaTime;
+        if (timerWarn > sec)
+        {
+            Warning.SetActive(false);
+        }
+    }
+
+    public void craftRifle()
+    {
+        if (getUpg == true && rifleActive == true)
+        {
+            rifleWork = true;
+            ammoRCount.text = capacityR + "/30";
+        }
+    }
+
+    public void restart()
+    {
+        hP = 100;
+        HP.text = hP + "%";
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    ///<summary>
+    /// Player Controls
+    /// </summary>
+
     //////////////////////////////////////////////////////////
 
     void OnLook(InputValue value)
@@ -287,7 +355,12 @@ public class PlayerControl : MonoBehaviour
     }
     void OnMove(InputValue value)
     {
+        isMoving = true;
         movementInput = value.Get<Vector2>();
+    }
+    void OnMoveStop(InputValue value)
+    {
+        isMoving = false;
     }
     void OnJump(InputValue value)
     {
@@ -300,6 +373,7 @@ public class PlayerControl : MonoBehaviour
 
     void OnFire()
     {
+        Interact = true;
         if (gunActive == true && gunOn == true)
         {
             if (capacity > 0)
@@ -349,7 +423,7 @@ public class PlayerControl : MonoBehaviour
         {
             SceneManager.LoadScene(0);
         }
-        if ((EPort == true && sceneNum == 1) && gunActive)
+        if ((EPort == true && sceneNum == 1) && getUpg)
         {
             SceneManager.LoadScene(1);
         }
@@ -419,18 +493,19 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    //////////////////////////////////////////////////////////
-
-    
-
-    void Timer(float sec)
+    void OnEsc(InputValue value)
     {
-        timerVal += Time.deltaTime;
-        if (timerVal > sec)
+        if (isEsc == true)
         {
-            SceneManager.LoadScene(5);
+            isEsc = false;
+        }
+        else if (isEsc == false)
+        {
+            isEsc = true;
         }
     }
+
+    //////////////////////////////////////////////////////////
 
     // Start is called before the first frame update
     void Start()
@@ -438,31 +513,32 @@ public class PlayerControl : MonoBehaviour
         capacity = mag;
         capacityR = magR;
         HP.text = hP + "%";
-
         staminaBar.fillAmount = 1;
-        //Debug.Log(script.start);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isEsc == true)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        if (isEsc == false)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
 
-        /*
-        if (script.start == true)
-        {
-            SceneManager.LoadScene(0);
-            mainCamera.enabled = true;
-            Menu.SetActive(false);
-            UI.SetActive(true);
-        }
-        else
-        {
-            mainCamera.enabled = false;
-        }
-        */
         if (isDie == true) 
         {
+            isEsc = false;
             Defeat.SetActive(true);
+            return;
+        }
+
+        if (isEmo == true)
+        {
+            isEsc = false;
+            EmoDmg.SetActive(true);
             return;
         }
 
@@ -471,19 +547,49 @@ public class PlayerControl : MonoBehaviour
             Timer(5);
         }
 
-        if (isGas == true && Time.time > gasTime)
+        if (gunOn)
         {
-            hP -= 1;
-            HP.text = hP + "%";
-            gasTime = Time.time + 1;
+            gun.SetActive(true);
+            ammo.SetActive(true);
         }
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        //if user mouse is at the button
-        if (Input.GetMouseButtonDown(0))
+        if (rifleOn)
         {
-            if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Gun")
+            rifle.SetActive(true);
+            ammoR.SetActive(true);
+        }
+
+        if (warningMsg)
+        {
+            warnStop(5);
+        }
+
+        if (hP <= 0)
+        {
+            isDie = true;
+            GetComponent<Animator>().SetTrigger("Die");
+        }
+
+        if (isGas == true && 10 > gasTime)
+        {
+            gasTime += Time.deltaTime;
+            timeGas += Time.deltaTime;
+            if (timeGas > gasVal)
+            {
+                hP -= 1;
+                HP.text = hP + "%";
+                timeGas -= 1;
+
+            }
+        }
+
+        ///<summary>
+        /// Raycasting, when player looks at the object and interacted with it
+        ///</summary>
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        {
+            if (hit.transform.tag == "Gun" && Interact)
             {
                 //what happens after clicking
                 gunActive = true;
@@ -494,7 +600,7 @@ public class PlayerControl : MonoBehaviour
                 rifle.SetActive(false);
                 ammoR.SetActive(false);
             }
-            else if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Rifle")
+            else if (hit.transform.tag == "Rifle" && Interact)
             {
                 rifleActive = true;
                 rifleOn = true;
@@ -504,29 +610,55 @@ public class PlayerControl : MonoBehaviour
                 gun.SetActive(false);
                 ammo.SetActive(false);
             }
-            else if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Bench")
+            else if (hit.transform.tag == "Bench" && Interact)
             {
                 bench.SetActive(true);
             }
-            else if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Crystal")
+            else if (hit.transform.tag == "NPC" && Interact)
+            {
+                hit.transform.GetComponent<NPC>().npcTalk();
+            }
+            else if (hit.transform.tag == "Button" && Interact)
+            {
+                hit.transform.GetComponent<Button>().buttonClick();
+            }
+            else if (hit.transform.tag == "Bomb" && Interact)
+            {
+                hit.transform.GetComponent<Bomb_PickUp>().bombUp();
+            }
+            else if (hit.transform.tag == "Crystal" && Interact)
             {
                 crystal = true;
-                Destroy(hit.collider.gameObject);
+                Destroy(hit.transform.gameObject);
             }
-            else if (Physics.Raycast(ray, out hit) && hit.collider.tag == "Win")
+            else if (hit.transform.tag == "Engine" && Interact)
             {
-                if (crystal)
+                parts = true;
+                Destroy(hit.transform.gameObject);
+            }
+            else if (hit.transform.tag == "Win" && Interact)
+            {
+                if (crystal == true && parts == true)
                 {
+                    power.SetActive(false);
                     Win.SetActive(true);
                     endGame = true;
                 }
-                
+                else if (crystal == false && parts == true)
+                {
+                    engine.SetActive(false);
+                }
+                else if (crystal == true && parts == false)
+                {
+                    power.SetActive(false);
+                }
             }
+            Interact = false;
         }
 
         Vector3 up = Vector3.zero;
 
-        if (Input.GetKey("w") && isLadder == true)
+        if (isMoving == true && isLadder == true)
         {
             up.y = 2 * movementSpeed;
         }

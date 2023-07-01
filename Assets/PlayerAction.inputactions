@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "MoveStop",
+                    "type": "Value",
+                    "id": "947cbdcc-1319-4844-b989-bd1202e7f3ab",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Look",
                     "type": "Value",
                     "id": "f1ca3747-f93c-49b5-866e-46a4436fdca8",
@@ -96,9 +105,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "FireHold",
+                    "name": "Esc",
                     "type": "Button",
-                    "id": "ec2e5138-b185-4dcd-8d0d-1c1479190e1c",
+                    "id": "218fd5f6-7659-4910-bc62-c5b8dcef8fd0",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -405,14 +414,113 @@
                 },
                 {
                     "name": "",
-                    "id": "864696b7-19a0-4dbe-912f-df3aea7c6a3b",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "Hold",
+                    "id": "0eeb2273-bd1b-4a92-a692-308a8b8a3d77",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "FireHold",
+                    "groups": "",
+                    "action": "Esc",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "WASD",
+                    "id": "2f37360b-4e25-4f79-a953-60770333e118",
+                    "path": "Dpad",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MoveStop",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "60f0de7e-c5ea-4ead-9eb0-3c01e2110a9f",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MoveStop",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "up",
+                    "id": "ea314a96-8a40-4fed-9574-790f88e846a8",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MoveStop",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "fc2220b9-e7d2-46be-9b9f-a3642111e7fb",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MoveStop",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "3814f297-3a89-49b8-a50e-5a4e573cbc58",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MoveStop",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "7e89c437-ee56-4066-989c-d386adbcfd5d",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MoveStop",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "ae918fde-981f-4252-b3a5-87603dc22bab",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MoveStop",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "5f8cd54b-430a-43a5-baa9-ba41cbec9789",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MoveStop",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "52530c08-c39e-44c3-ac9e-c8f8f56d0887",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MoveStop",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

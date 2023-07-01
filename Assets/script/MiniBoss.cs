@@ -24,7 +24,9 @@ public class MiniBoss : MonoBehaviour
     private bool seePlayer;
 
     public AudioSource dieAudio;
+
     public GameObject Spawn;
+    public HealthBar healthBar;
 
     void OnCollisionEnter(Collision collision)
     {
@@ -34,8 +36,9 @@ public class MiniBoss : MonoBehaviour
             {
                 hp -= 1;
                 dieAudio.Play();
+                healthBar.SetHealth(hp);
             }
-            else
+            if (hp <= 0)
             {
                 dieAudio.Play();
                 Spawn.SetActive(true);
@@ -50,6 +53,7 @@ public class MiniBoss : MonoBehaviour
         Speed = MaxSpeed;
         RageSpeed = Speed * rageSpeed;
         RageHP = hp * 0.3f;
+        healthBar.SetMaxHealth(hp);
     }
 
     // Update is called once per frame

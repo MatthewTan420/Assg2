@@ -35,6 +35,11 @@ TagManager:
   - Win
   - Explode
   - hitshipHint
+  - mainSign
+  - Engine
+  - EmotionDmg
+  - NPC
+  - Button
   layers:
   - Default
   - TransparentFX

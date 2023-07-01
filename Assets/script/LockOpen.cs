@@ -12,7 +12,7 @@ public class LockOpen : MonoBehaviour
     {
         if (script.Key)
         {
-            Destroy(door);
+            door.SetActive(false);
         }
         else
         {

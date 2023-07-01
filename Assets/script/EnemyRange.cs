@@ -28,6 +28,8 @@ public class EnemyRange : MonoBehaviour
     public AudioSource dieAudio;
     public AudioSource shotAudio;
 
+    public HealthBar healthBar;
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Bullet")
@@ -35,8 +37,9 @@ public class EnemyRange : MonoBehaviour
             if (hp > 0)
             {
                 hp -= 1;
+                healthBar.SetHealth(hp);
             }
-            else
+            if (hp == 0)
             {
                 Destroy(gameObject);
             }
@@ -47,7 +50,17 @@ public class EnemyRange : MonoBehaviour
     {
         if (col.gameObject.tag == "Explode")
         {
-            Destroy(gameObject);
+            if (hp > 0)
+            {
+                hp -= 30;
+                healthBar.SetHealth(hp);
+                //dieAudio.Play();
+            }
+            if (hp <= 0)
+            {
+                //dieAudio.Play();
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -55,6 +68,7 @@ public class EnemyRange : MonoBehaviour
     void Start()
     {
         Speed = MaxSpeed;
+        healthBar.SetMaxHealth(hp);
     }
 
     // Update is called once per frame
