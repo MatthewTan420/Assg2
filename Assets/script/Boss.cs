@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Author: Matthew Tan 
+ * Date: 1/7/2023
+ * Description: This is the code for all of the player controls, raycasting and interactions
+ */
 public class Boss : MonoBehaviour
 {
     public float MaxSpeed;
@@ -35,6 +40,8 @@ public class Boss : MonoBehaviour
     private bool seePlayer;
 
     public AudioSource dieAudio;
+    public AudioSource shotAudio;
+    public AudioSource rageAudio;
 
     public GameObject Spawn;
     public GameObject Disable;
@@ -73,6 +80,11 @@ public class Boss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(hp == RageHP)
+        {
+            rageAudio.Play();
+        }
+
         if (!seePlayer)
         {
             hitColliders = Physics.OverlapSphere(transform.position, DetectiontRange);
@@ -101,7 +113,7 @@ public class Boss : MonoBehaviour
 
                     if (Time.time > nextfire)
                     {
-                        //shotAudio.Play();
+                        shotAudio.Play();
                         nextfire = Time.time + firerate;
                         var bullet = Instantiate(projectilePrefab, ProjectileSpawnPoint.position, ProjectileSpawnPoint.rotation);
                         bullet.GetComponent<Rigidbody>().velocity = ProjectileSpawnPoint.forward * ProjectileSpeed;

@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Author: Matthew Tan 
+ * Date: 1/7/2023
+ * Description: This is the code for all of the player controls, raycasting and interactions
+ */
 public class EnemyRange : MonoBehaviour
 {
     public float MaxSpeed;
@@ -30,6 +35,9 @@ public class EnemyRange : MonoBehaviour
 
     public HealthBar healthBar;
 
+    ///<summary>
+    /// when enemy gets hit by bullet
+    ///</summary>
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Bullet")
@@ -38,14 +46,19 @@ public class EnemyRange : MonoBehaviour
             {
                 hp -= 1;
                 healthBar.SetHealth(hp);
+                dieAudio.Play();
             }
             if (hp == 0)
             {
+                dieAudio.Play();
                 Destroy(gameObject);
             }
         }
     }
 
+    ///<summary>
+    /// if enemy near bomb
+    ///</summary>
     void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.tag == "Explode")
@@ -54,11 +67,11 @@ public class EnemyRange : MonoBehaviour
             {
                 hp -= 30;
                 healthBar.SetHealth(hp);
-                //dieAudio.Play();
+                dieAudio.Play();
             }
             if (hp <= 0)
             {
-                //dieAudio.Play();
+                dieAudio.Play();
                 Destroy(gameObject);
             }
         }
@@ -74,6 +87,9 @@ public class EnemyRange : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ///<summary>
+        /// if enemy see player, they follow player
+        ///</summary>
         if (!seePlayer)
         {
             hitColliders = Physics.OverlapSphere(transform.position, DetectiontRange);
@@ -100,6 +116,9 @@ public class EnemyRange : MonoBehaviour
                     var Distance = Heading.magnitude;
                     var Direction = Heading / Distance;
 
+                    ///<summary>
+                    /// enemy shoots at player
+                    ///</summary>
                     if (Time.time > nextfire)
                     {
                         shotAudio.Play();

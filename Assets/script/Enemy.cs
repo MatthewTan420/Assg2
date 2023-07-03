@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Author: Matthew Tan 
+ * Date: 1/7/2023
+ * Description: This is the code for all of the player controls, raycasting and interactions
+ */
 public class Enemy : MonoBehaviour
 {
     public float MaxSpeed;
@@ -24,6 +29,9 @@ public class Enemy : MonoBehaviour
 
     public HealthBar healthBar;
 
+    ///<summary>
+    /// when enemy gets hit by bullet
+    ///</summary>
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Bullet")
@@ -42,6 +50,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    ///<summary>
+    /// if enemy near bomb
+    ///</summary>
     void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.tag == "Explode")
@@ -71,6 +82,9 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ///<summary>
+        /// if enemy see player, they follow player
+        ///</summary>
         if (!seePlayer)
         {
             hitColliders = Physics.OverlapSphere(transform.position, DetectiontRange);

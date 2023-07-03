@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Author: Matthew Tan 
+ * Date: 1/7/2023
+ * Description: This is the code for all of the player controls, raycasting and interactions
+ */
 public class Collide_Trigger : MonoBehaviour
 {
     public GameObject text;
@@ -14,25 +19,5 @@ public class Collide_Trigger : MonoBehaviour
     void OnTriggerExit(Collider other)
     {
         text.SetActive(false);
-    }
-
-    void TeleCheck()
-    {
-        if (gameObject.tag == "Teleport")
-        {
-            Debug.Log(gameObject.tag);
-        }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

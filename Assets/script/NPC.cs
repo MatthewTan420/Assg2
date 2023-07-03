@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Author: Matthew Tan 
+ * Date: 1/7/2023
+ * Description: This is the code for all of the player controls, raycasting and interactions
+ */
 public class NPC : MonoBehaviour
 {
     private bool DetectionRange = false;
-    private bool hitOn = false;
     public GameObject textList;
     public GameObject text;
     public GameObject text1;
@@ -16,6 +20,9 @@ public class NPC : MonoBehaviour
 
     public PlayerControl PlayerControl;
 
+    ///<summary>
+    /// if within NPC range
+    ///</summary>
     void OnTriggerEnter(Collider other)
     {
         DetectionRange = true;
@@ -28,7 +35,9 @@ public class NPC : MonoBehaviour
         textList.SetActive(false);
     }
 
-    // Update is called once per frame
+    ///<summary>
+    /// NPC talk to you
+    ///</summary>
     public void npcTalk()
     {
         if (DetectionRange)
@@ -38,25 +47,21 @@ public class NPC : MonoBehaviour
             {
                 text.SetActive(false);
                 text1.SetActive(true);
-                hitOn = false;
             }
             if (textNum == 2)
             {
                 text1.SetActive(false);
                 text2.SetActive(true);
-                hitOn = false;
             }
             if (textNum == 3)
             {
                 text2.SetActive(false);
                 text3.SetActive(true);
-                hitOn = false;
             }
             if (textNum == 4)
             {
                 text3.SetActive(false);
                 text4.SetActive(true);
-                hitOn = false;
             }
         }
     }

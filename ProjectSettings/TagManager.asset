@@ -40,6 +40,8 @@ TagManager:
   - EmotionDmg
   - NPC
   - Button
+  - Win2
+  - Cutscene
   layers:
   - Default
   - TransparentFX

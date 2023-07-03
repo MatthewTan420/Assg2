@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Author: Matthew Tan 
+ * Date: 1/7/2023
+ * Description: This is the code for all of the player controls, raycasting and interactions
+ */
 public class MiniBoss : MonoBehaviour
 {
     public float MaxSpeed;
@@ -24,6 +29,7 @@ public class MiniBoss : MonoBehaviour
     private bool seePlayer;
 
     public AudioSource dieAudio;
+    public AudioSource rageAudio;
 
     public GameObject Spawn;
     public HealthBar healthBar;
@@ -59,6 +65,11 @@ public class MiniBoss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (hp == RageHP)
+        {
+            rageAudio.Play();
+        }
+
         if (!seePlayer)
         {
             hitColliders = Physics.OverlapSphere(transform.position, DetectiontRange);

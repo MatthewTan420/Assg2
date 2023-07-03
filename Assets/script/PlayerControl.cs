@@ -57,6 +57,8 @@ public class PlayerControl : MonoBehaviour
     public bool isLock = false;
     public static bool crystal = true;
     public static bool parts = true;
+    public static bool crystalIn = false;
+    public static bool partsIn = false;
     public GameObject lockDoor;
     public static float hP = 100;
     public TextMeshProUGUI HP;
@@ -68,8 +70,9 @@ public class PlayerControl : MonoBehaviour
     float timeGas = 0;
     float timerVal = 0;
     float timerWarn = 0;
-    bool endGame = false;
+    static bool endGame = false;
     bool isEsc = true;
+    bool isCut = false;
 
     public Transform bulletSpawnPoint;
     public GameObject bulletPrefab;
@@ -113,6 +116,9 @@ public class PlayerControl : MonoBehaviour
             crystal = false;
             parts = false;
             hP = 100;
+            endGame = false;
+            crystalIn = false;
+            partsIn = false;
         }
 
         if (collision.gameObject.tag == "Solid")
@@ -160,6 +166,13 @@ public class PlayerControl : MonoBehaviour
                 hP -= 20;
                 HP.text = hP + "%";
             }
+        }
+
+        if (collision.gameObject.tag == "Cutscene")
+        {
+            endGame = true;
+            isCut = true;
+            Win.SetActive(true);
         }
     }
 
@@ -326,6 +339,9 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    ///<summary>
+    /// make the rifle usable
+    ///</summary>
     public void craftRifle()
     {
         if (getUpg == true && rifleActive == true)
@@ -335,6 +351,9 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    ///<summary>
+    /// respawns the player when they click on try again
+    ///</summary>
     public void restart()
     {
         hP = 100;
@@ -528,6 +547,9 @@ public class PlayerControl : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
         }
 
+        ///<summary>
+        /// stops the game when player die
+        ///</summary>
         if (isDie == true) 
         {
             isEsc = false;
@@ -535,6 +557,9 @@ public class PlayerControl : MonoBehaviour
             return;
         }
 
+        ///<summary>
+        /// stops the game when player die
+        ///</summary>
         if (isEmo == true)
         {
             isEsc = false;
@@ -545,6 +570,11 @@ public class PlayerControl : MonoBehaviour
         if (endGame == true)
         {
             Timer(5);
+        }
+
+        if (isCut == true)
+        {
+            return;
         }
 
         if (gunOn)
@@ -570,6 +600,9 @@ public class PlayerControl : MonoBehaviour
             GetComponent<Animator>().SetTrigger("Die");
         }
 
+        ///<summary>
+        /// If player is in the poison gas
+        ///</summary>
         if (isGas == true && 10 > gasTime)
         {
             gasTime += Time.deltaTime;
@@ -581,6 +614,20 @@ public class PlayerControl : MonoBehaviour
                 timeGas -= 1;
 
             }
+        }
+
+        if (crystalIn == true && partsIn == true)
+        {
+            
+            SceneManager.LoadScene(6);
+        }
+        if (crystalIn == true)
+        {
+            power.SetActive(false);
+        }
+        if (partsIn == true)
+        {
+            engine.SetActive(false);
         }
 
         ///<summary>
@@ -638,29 +685,31 @@ public class PlayerControl : MonoBehaviour
             }
             else if (hit.transform.tag == "Win" && Interact)
             {
-                if (crystal == true && parts == true)
+                if (crystal == true)
                 {
+                    crystalIn = true;
                     power.SetActive(false);
-                    Win.SetActive(true);
-                    endGame = true;
                 }
-                else if (crystal == false && parts == true)
+            }
+            else if (hit.transform.tag == "Win2" && Interact)
+            {
+                if (parts == true)
                 {
+                    partsIn = true;
                     engine.SetActive(false);
-                }
-                else if (crystal == true && parts == false)
-                {
-                    power.SetActive(false);
                 }
             }
             Interact = false;
         }
 
+        ///<summary>
+        /// Player movement, where the player peforms actions such as walking, sprinting and climbing
+        ///</summary>
         Vector3 up = Vector3.zero;
 
         if (isMoving == true && isLadder == true)
         {
-            up.y = 2 * movementSpeed;
+            up.y = 5 * movementSpeed;
         }
 
         Vector3 forwarDir = transform.forward;
